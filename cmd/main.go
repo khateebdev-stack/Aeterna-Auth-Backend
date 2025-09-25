@@ -32,7 +32,7 @@ func main() {
 	redisPassword := os.Getenv("REDIS_PASSWORD")
 
 	// Initialize PostgreSQL and Redis connections
-	if err := database.InitPostgresDB(pgConnStr); err != nil { //InitPostgresDb is basicaly a function in /internal/database we called it here to pass our DB connection string , 
+	if err := database.InitPostgresDB(pgConnStr); err != nil { //InitPostgresDb is basicaly a function in /internal/database we called it here to pass our DB connection string ,
 		log.Fatalf("Could not connect to Database : %v ", err)
 	}
 
@@ -52,6 +52,9 @@ func main() {
 	// Define API routes.
 	router.HandleFunc("/api/register", handlers.RegisterUser(userService)).Methods("POST")
 	router.HandleFunc("/api/login", handlers.LoginUser(userService)).Methods(("POST"))
+	router.HandleFunc("/api/user/delete", handlers.DeleteUser(userService)).Methods("Delete")
+	router.HandleFunc("/api/user/update-password", handlers.UpdatePassword(userService)).Methods("PUT")
+	router.HandleFunc("/api/user/update-email", handlers.UpdateEmail(userService)).Methods("PUT")
 
 	// Old route
 	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
